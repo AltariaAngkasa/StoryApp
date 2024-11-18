@@ -32,11 +32,17 @@ class DetailStoriesActivity : AppCompatActivity() {
             viewModel.getDetailStory(token, id)
         }
         viewModel.detail.observe(this) {story->
-            Glide.with(this@DetailStoriesActivity)
-                .load(story.photoUrl)
-                .into(binding.imageContent)
-            binding.titleContent.text = story.name
-            binding.descContent.text = story.description
+            if (story != null) {
+                Glide.with(this@DetailStoriesActivity)
+                    .load(story.photoUrl)
+                    .into(binding.imageContent)
+            }
+            if (story != null) {
+                binding.titleContent.text = story.name
+            }
+            if (story != null) {
+                binding.descContent.text = story.description
+            }
             showLoading(false)
         }
     }

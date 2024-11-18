@@ -8,7 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 
-class EmailCustom: AppCompatEditText {
+class EmailCustom : AppCompatEditText {
     constructor(context: Context) : super(context) {
         init()
     }
@@ -21,13 +21,14 @@ class EmailCustom: AppCompatEditText {
         init()
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    // Override `onDraw` method correctly
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         hint = "Masukkan email-mu"
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
     }
 
-    fun init() {
+    private fun init() {
         val emailRegex = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+".toRegex()
         val errorMessage = "Format email tidak valid"
 
@@ -50,5 +51,4 @@ class EmailCustom: AppCompatEditText {
             }
         })
     }
-
 }

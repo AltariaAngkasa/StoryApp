@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.picodiploma.loginwithanimation.data.story.StoriesAdapter
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityMainBinding
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
+import com.dicoding.picodiploma.loginwithanimation.view.uploadstory.UploadStoryActivity
 import com.dicoding.picodiploma.loginwithanimation.view.welcome.WelcomeActivity
 
 class MainActivity : AppCompatActivity() {
@@ -38,12 +39,14 @@ class MainActivity : AppCompatActivity() {
         binding.rvStory.adapter = adapter
 
         viewModel.listStories.observe(this) { stories ->
-            adapter.setStories(stories)
+            if (stories != null) {
+                adapter.setStories(stories)
+            }
             showLoading(false)
         }
 
         binding.AddContent.setOnClickListener {
-            val intent = Intent(this@MainActivity, UploadStoriesActivity::class.java)
+            val intent = Intent(this@MainActivity, UploadStoryActivity::class.java)
             startActivity(intent)
         }
     }

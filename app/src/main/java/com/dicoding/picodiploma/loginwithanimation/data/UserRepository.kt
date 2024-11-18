@@ -25,30 +25,19 @@ class UserRepository private constructor(
     private val apiService: ApiService,
     private val preference: UserPreference
 ) {
+    private val _listStories = MutableLiveData<List<ListStoryItem>?>()
+    val listStories: LiveData<List<ListStoryItem>?> = _listStories
 
-    // LiveData properties
-    private val _listStories = MutableLiveData<List<ListStoryItem>>()
-    val listStories: LiveData<List<ListStoryItem>> = _listStories
+    private val _detail = MutableLiveData<Story?>()
+    val detail: LiveData<Story?> = _detail
 
-    private val _detail = MutableLiveData<Story>()
-    val detail: LiveData<Story> = _detail
-
-    // Authentication Functions
     fun register(name: String, email: String, password: String) = liveData {
         emit(ResultData.Loading)
         try {
             val response = apiService.register(name, email, password)
             emit(ResultData.Success(response.message))
         } catch (e: HttpException) {
-            val errorMessage = if (e.code() == 400) {
-                "Email sudah dimasukan"
-            } else {
-                val errorBody = Gson().fromJson(
-                    e.response()?.errorBody()?.string(),
-                    FailResponse::class.java
-                )
-                errorBody.message.toString()
-            }
+            val errorMessage = handleErrorResponse<FailResponse>(e)?.message ?: "Terjadi kesalahan"
             emit(ResultData.Error(errorMessage))
         }
     }
@@ -59,18 +48,16 @@ class UserRepository private constructor(
             val response = apiService.login(email, password)
             emit(ResultData.Success(response.loginResult?.token))
         } catch (e: HttpException) {
-            val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, LoginResponse::class.java)
-            emit(ResultData.Error(errorResponse.message!!))
+            val errorMessage = handleErrorResponse<LoginResponse>(e)?.message ?: "Terjadi kesalahan"
+            emit(ResultData.Error(errorMessage))
         }
     }
 
-    // Story Functions
     fun getAllStories(token: String) {
         apiService.getStories("Bearer $token").enqueue(object : Callback<GetAllStoryResponse> {
             override fun onResponse(call: Call<GetAllStoryResponse>, response: Response<GetAllStoryResponse>) {
                 if (response.isSuccessful) {
-                    _listStories.value = response.body()?.listStory
+                    _listStories.value = response.body()?.listStory as List<ListStoryItem>?
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
@@ -86,7 +73,7 @@ class UserRepository private constructor(
         apiService.detailStory("Bearer $token", id).enqueue(object : Callback<DetailStoryResponse> {
             override fun onResponse(call: Call<DetailStoryResponse>, response: Response<DetailStoryResponse>) {
                 if (response.isSuccessful) {
-                    _detail.value = response.body()?.story ?: return
+                    _detail.value = response.body()?.story
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
@@ -110,15 +97,11 @@ class UserRepository private constructor(
             val response = apiService.addStory("Bearer $token", imagePart, requestBody)
             emit(ResultData.Success(response))
         } catch (e: HttpException) {
-            val errorBody = Gson().fromJson(
-                e.response()?.errorBody()?.string(),
-                AddNewStoryResponse::class.java
-            )
-            emit(ResultData.Error(errorBody.message))
+            val errorMessage = handleErrorResponse<AddNewStoryResponse>(e)?.message ?: "Terjadi kesalahan"
+            emit(ResultData.Error(errorMessage))
         }
     }
 
-    // Session Management Functions
     fun getSession(): Flow<UserModel> = preference.getSession()
 
     suspend fun saveSession(user: UserModel) {
@@ -139,5 +122,15 @@ class UserRepository private constructor(
             instance ?: synchronized(this) {
                 instance ?: UserRepository(apiService, pref)
             }.also { instance = it }
+    }
+
+    // Utility to handle error response parsing
+    private inline fun <reified T> handleErrorResponse(e: HttpException): T? {
+        return try {
+            val errorBody = e.response()?.errorBody()?.string()
+            Gson().fromJson(errorBody, T::class.java)
+        } catch (ex: Exception) {
+            null
+        }
     }
 }

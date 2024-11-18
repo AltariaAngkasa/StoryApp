@@ -9,18 +9,20 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dicoding.picodiploma.loginwithanimation.data.response.ListStoryItem
+import com.dicoding.picodiploma.loginwithanimation.databinding.ItemRowBinding
+import com.dicoding.picodiploma.loginwithanimation.view.detail.DetailStoriesActivity
 
 class StoriesAdapter : RecyclerView.Adapter<StoriesAdapter.StoryViewHolder>() {
     private val stories: MutableList<ListStoryItem> = mutableListOf()
 
-    inner class StoryViewHolder(private val binding: ItemsStoriesBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class StoryViewHolder(private val binding: ItemRowBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(story: ListStoryItem) {
-            binding.usernameTextView.text = story.name
-            binding.description.text = story.description
+            binding.username.text = story.name
+            binding.desc.text = story.description
             Glide.with(itemView)
                 .load(story.photoUrl)
-                .into(binding.previewImageView)
-            binding.story.setOnClickListener {
+                .into(binding.imageContent)
+            binding.listStory.setOnClickListener {
                 val intent = Intent(it.context, DetailStoriesActivity::class.java)
                 intent.putExtra(DetailStoriesActivity.EXTRA_ID, story.id)
                 itemView.context.startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(itemView.context as Activity).toBundle())
@@ -29,7 +31,7 @@ class StoriesAdapter : RecyclerView.Adapter<StoriesAdapter.StoryViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
-        val binding = ItemsStoriesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return StoryViewHolder(binding)
     }
 
