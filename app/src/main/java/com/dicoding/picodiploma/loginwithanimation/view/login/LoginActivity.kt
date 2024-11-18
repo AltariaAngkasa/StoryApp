@@ -119,7 +119,7 @@ class LoginActivity : AppCompatActivity() {
                     is ResultData.Success ->{
                         val token = result.data.toString()
                         viewModel.saveSession(UserModel(email, password, token))
-                        showToast("Welcoma to Dicoding Story")
+                        showToast("Welcome to Dicoding Story")
                         showLoading(false)
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)

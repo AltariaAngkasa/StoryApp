@@ -71,6 +71,24 @@ class SignupActivity : AppCompatActivity() {
         }
         supportActionBar?.hide()
     }
+    private fun setupAction() {
+        binding.signupButton.setOnClickListener {
+            val email = binding.edRegisterMail.text.toString()
+
+            AlertDialog.Builder(this).apply {
+                setTitle("Yeayy")
+                setMessage("Akun kamu sudah terdaftar.")
+                setPositiveButton("Next") { _, _ ->
+                    val intent = Intent(context, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    finish()
+                }
+                create()
+                show()
+            }
+        }
+    }
 
     private fun register() {
         val name = binding.nameEditText.text.toString()
@@ -87,8 +105,7 @@ class SignupActivity : AppCompatActivity() {
                     is ResultData.Success<*> -> {
                         showToast(result.data.toString())
                         showLoading(false)
-                        val intent = Intent(this, LoginActivity::class.java)
-                        startActivity(intent)
+                        setupAction()
                     }
 
                     is ResultData.Error -> {

@@ -44,6 +44,10 @@ class MainActivity : AppCompatActivity() {
             }
             showLoading(false)
         }
+        binding.topRightButton.setOnClickListener {
+            val intent = Intent(this@MainActivity, WelcomeActivity::class.java)
+            startActivity(intent)
+        }
 
         binding.AddContent.setOnClickListener {
             val intent = Intent(this@MainActivity, UploadStoryActivity::class.java)
