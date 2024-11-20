@@ -164,6 +164,7 @@
         app:layout_constraintBottom_toTopOf="@+id/passwordEditTextLayout"
         app:layout_constraintEnd_toEndOf="@+id/passwordEditTextLayout"
         app:layout_constraintStart_toStartOf="@+id/passwordEditTextLayout"
+        android:visibility="gone"
         tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

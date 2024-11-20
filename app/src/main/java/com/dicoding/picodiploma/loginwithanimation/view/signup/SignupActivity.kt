@@ -21,8 +21,8 @@ import com.dicoding.picodiploma.loginwithanimation.customview.PasswordCustom
 import com.dicoding.picodiploma.loginwithanimation.data.pref.ResultData
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivitySignupBinding
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
-import com.dicoding.picodiploma.loginwithanimation.view.login.LoginActivity
 import com.dicoding.picodiploma.loginwithanimation.view.main.MainViewModel
+import com.dicoding.picodiploma.loginwithanimation.view.welcome.WelcomeActivity
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
@@ -78,13 +78,13 @@ class SignupActivity : AppCompatActivity() {
     }
     private fun setupAction() {
         binding.signupButton.setOnClickListener {
-            val email = binding.edRegisterMail.text.toString()
+//            val email = binding.edRegisterMail.text.toString()
 
             AlertDialog.Builder(this).apply {
                 setTitle("Yeayy")
                 setMessage("Akun kamu sudah terdaftar.")
                 setPositiveButton("Next") { _, _ ->
-                    val intent = Intent(context, LoginActivity::class.java)
+                    val intent = Intent(context, WelcomeActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)
                     finish()
@@ -161,9 +161,6 @@ class SignupActivity : AppCompatActivity() {
     }
 
 
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-    }
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
@@ -179,5 +176,9 @@ class SignupActivity : AppCompatActivity() {
         } else {
             myButton.isEnabled = false
         }
+    }
+
+    private fun showLoading(isLoading: Boolean){
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }

@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -118,10 +119,12 @@ class LoginActivity : AppCompatActivity() {
                     }
                     is ResultData.Success ->{
                         val token = result.data.toString()
+                        Log.d("LoginActivity", "Token: $token")
                         viewModel.saveSession(UserModel(email, password, token))
                         showToast("Welcome to Dicoding Story")
                         showLoading(false)
                         val intent = Intent(this, MainActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(intent)
                     }
                     is ResultData.Error -> {

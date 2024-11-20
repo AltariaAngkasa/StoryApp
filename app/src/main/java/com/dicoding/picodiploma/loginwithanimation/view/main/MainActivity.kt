@@ -1,11 +1,8 @@
 package com.dicoding.picodiploma.loginwithanimation.view.main
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels { ViewModelFactory.getInstance(this) }
     private lateinit var binding: ActivityMainBinding
     private val adapter = StoriesAdapter()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +43,10 @@ class MainActivity : AppCompatActivity() {
             showLoading(false)
         }
         binding.topRightButton.setOnClickListener {
+            viewModel.logout()
             val intent = Intent(this@MainActivity, WelcomeActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         binding.AddContent.setOnClickListener {
@@ -54,6 +54,24 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.menu_action, menu)
+//        return true
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return when (item.itemId) {
+//            R.id.logout -> {
+//                // Logout logic
+//                viewModel.logout() // Jika ada fungsi logout
+//                val intent = Intent(this, WelcomeActivity::class.java)
+//                startActivity(intent)
+//                finish()
+//                true
+//            }
+//            else -> super.onOptionsItemSelected(item)
+//        }
+//    }
 
 
     private fun showLoading(isLoading: Boolean) {
