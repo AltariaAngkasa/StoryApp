@@ -161,12 +161,9 @@
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="166dp"
-        android:layout_marginEnd="165dp"
-        android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/passwordEditTextLayout"
         app:layout_constraintEnd_toEndOf="@+id/passwordEditTextLayout"
-        app:layout_constraintStart_toStartOf="@+id/guidelineHorizontal" />
+        app:layout_constraintStart_toStartOf="@+id/passwordEditTextLayout"
+        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

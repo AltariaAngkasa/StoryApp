@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.dicoding.picodiploma.loginwithanimation.customview.Button
 import com.dicoding.picodiploma.loginwithanimation.customview.EmailCustom
+import com.dicoding.picodiploma.loginwithanimation.customview.NamaCustom
 import com.dicoding.picodiploma.loginwithanimation.customview.PasswordCustom
 import com.dicoding.picodiploma.loginwithanimation.data.pref.ResultData
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivitySignupBinding
@@ -25,6 +26,7 @@ import com.dicoding.picodiploma.loginwithanimation.view.main.MainViewModel
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
+    private lateinit var nameText: NamaCustom
     private lateinit var passwordText: PasswordCustom
     private lateinit var emailText: EmailCustom
     private lateinit var myButton: Button
@@ -35,9 +37,12 @@ class SignupActivity : AppCompatActivity() {
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         passwordText = binding.edRegisterPassword
         emailText = binding.edRegisterMail
+        nameText = binding.nameEditText
         myButton = binding.signupButton
+
 
         passwordText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -102,7 +107,7 @@ class SignupActivity : AppCompatActivity() {
                         showLoading(true)
                     }
 
-                    is ResultData.Success<*> -> {
+                    is ResultData.Success -> {
                         showToast(result.data.toString())
                         showLoading(false)
                         setupAction()
