@@ -84,6 +84,10 @@ class UploadStoryActivity : AppCompatActivity() {
     ){isSuccess ->
         if (isSuccess){
             showImage()
+        } else{
+            //Reset currentImageUri jika kamera gagal
+            currentImageUri = null
+            Toast.makeText(this, "Camera operation cancelled", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -106,29 +110,38 @@ class UploadStoryActivity : AppCompatActivity() {
             Log.d("Image URI", "No Image Found")
         }
     }
-
-    private fun uploadImage(){
+    private fun uploadImage() {
         val uri = currentImageUri
-        if (uri != null){
-            val imageFile = uriToFile(uri, this).reduceFileImage()
-            Log.d("Image File", "Image path: ${imageFile.path}")
-            val desc = binding.edAddDescription.text.toString()
+        val desc = binding.edAddDescription.text.toString().trim()
 
-            viewModel.getSession().observe(this){story ->
-                val token = story.token
-                viewModel.uploadImage(token, imageFile, desc).observe(this){result ->
-                    if (result != null){
-                        when (result){
-                            is ResultData.Loading -> showLoading(true)
-                            is ResultData.Success ->{
-                                showToast("Token is Null")
-                                showLoading(false)
-                                startActivity(Intent(this, MainActivity::class.java))
-                            }
-                            is ResultData.Error->{
-                                showToast(result.error)
-                                showLoading(false)
-                            }
+        // Validasi input
+        if (uri == null) {
+            showToast("Please select an image before uploading.")
+            return
+        }
+
+        if (desc.isEmpty()) {
+            showToast("Please add a description before uploading.")
+            return
+        }
+
+        val imageFile = uriToFile(uri, this).reduceFileImage()
+        Log.d("Image File", "Image path: ${imageFile.path}")
+
+        viewModel.getSession().observe(this) { story ->
+            val token = story.token
+            viewModel.uploadImage(token, imageFile, desc).observe(this) { result ->
+                if (result != null) {
+                    when (result) {
+                        is ResultData.Loading -> showLoading(true)
+                        is ResultData.Success -> {
+                            showToast("Upload successful!")
+                            showLoading(false)
+                            startActivity(Intent(this, MainActivity::class.java))
+                        }
+                        is ResultData.Error -> {
+                            showToast(result.error)
+                            showLoading(false)
                         }
                     }
                 }
